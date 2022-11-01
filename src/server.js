@@ -163,6 +163,7 @@ carritosRouter.delete('/:id', async (req, res) => {
     }
 })
 
+// Falta crear carrito
 //--------------------------------------------------
 // router de productos en carrito
 
