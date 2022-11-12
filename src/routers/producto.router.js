@@ -25,11 +25,15 @@ const productosRouter = new Router()
 
 productosRouter.get('/', async (req, res) => {
     try{
-        const productos = await productosApi.listAll()
-        res.send({
-            data: productos,
-            error: false
-        });
+        const productsObjet = await productosApi.listAll()
+
+        const productsJSON = JSON.parse(JSON.stringify(productsObjet));
+
+        return res.render("products", 
+        { 
+            products: productsJSON,
+            haveProducts: productsJSON.length > 0
+        })
     } catch(e){
         console.log(e);
         res.send({

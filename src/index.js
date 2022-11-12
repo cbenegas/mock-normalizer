@@ -1,6 +1,6 @@
-import app from './server.js'
+import app from './bootServer.js'
 
-const PORT = 8095
+const PORT = 8091
 const server = app.listen(PORT, () => {
     console.log(`Servidor http escuchando en el puerto ${server.address().port}`)
 })

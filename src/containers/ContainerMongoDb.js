@@ -25,7 +25,6 @@ class ContainerMongoDb {
     async listAll() {
         try{
             const element = await this.coleccion.find({});
-            console.log("🚀 ~ file: ContainerMongoDb.js ~ line 28 ~ ContainerMongoDb ~ listAll ~ element", element)
             return element
         }catch(e){
             throw new Error(e);
