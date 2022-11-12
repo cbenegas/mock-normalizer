@@ -1,5 +1,5 @@
 export default {
-    TypeDB: 'firebase',
+    TypeDB: 'mongodb',
     fileSystem: {
         path: './DB'
     },

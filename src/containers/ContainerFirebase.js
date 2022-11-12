@@ -1,5 +1,5 @@
 import admin from "firebase-admin"
-import config from '../config.js'
+import config from '../../config/config.js'
 
 admin.initializeApp({
     credential: admin.credential.cert(config.firebase)
@@ -34,15 +34,14 @@ class ContainerFirebase {
             let productos = [];
             const coleccionSnapshot = await this.coleccion.get();
             coleccionSnapshot.forEach((doc) => productos.push({ id: doc.id, ...doc.data() }));
-            return { error: [], 
+            return { error: false, 
                 msg: "Productos obtenidos.", 
                 data: productos 
             };
         } catch(e){
-            console.log(e);
             return {
                 data: e.message,
-                error: true
+                error: [e.message]
             };
         }
     }
@@ -52,7 +51,7 @@ class ContainerFirebase {
             nuevoElem.timestamp = new Date();
             const productoAddedId = await this.coleccion.add( nuevoElem );
             return {
-                error: [],
+                error: false,
                 msg: `Producto Agregado correctamente con el id: ${productoAddedId.id}`,
                 data: productoAddedId
             };
@@ -117,4 +116,4 @@ class ContainerFirebase {
     }
 }
 
-export default ContainerFirebase
+export default ContainerFirebase;

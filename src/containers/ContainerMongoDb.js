@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import config from '../config.js'
+import config from '../../config/config.js'
 
 await mongoose.connect(config.mongodb.cnxStr, config.mongodb.options)
 
@@ -25,6 +25,7 @@ class ContainerMongoDb {
     async listAll() {
         try{
             const element = await this.coleccion.find({});
+            console.log("🚀 ~ file: ContainerMongoDb.js ~ line 28 ~ ContainerMongoDb ~ listAll ~ element", element)
             return element
         }catch(e){
             throw new Error(e);
@@ -34,9 +35,9 @@ class ContainerMongoDb {
     async save(nuevoElem) {
         try{
             const element = await this.coleccion.create(nuevoElem);
+            console.log("🚀 ~ file: ContainerMongoDb.js ~ line 38 ~ ContainerMongoDb ~ save ~ element", element)
             return element
         }catch(e){
-            console.log(e);
             throw new Error(e);
         }
     }

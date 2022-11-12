@@ -3,8 +3,41 @@ import config from '../config.js'
 
 class ContainerFile {
 
-    constructor(ruta) {
-        this.ruta = `${config.fileSystem.path}/${ruta}`;
+    constructor(filename){
+        this.filename = String().concat('.\/', filename);
+        this.readFile()
+            .then(data => {
+                // console.log(`Archivo cargado correctamente. Contenido: \n ${JSON.stringify(data)}`);
+            })
+            .catch(()=>{
+                this.saveFile('')
+                    .then( console.log("El archivo no existe. Archivo creado!") )
+                    .catch( console.error("El archivo no existe y no se pudo crear."))
+            })
+    }
+
+    saveFile(content){
+        return new Promise((resolve, reject) => {
+            fs.writeFile(this.filename, content, (error)=>{
+                if(error){
+                    console.error(`Error al escribir el archivo: ${error}`);
+                    reject();
+                }
+                resolve();
+            });
+        });
+    }
+
+    readFile(){
+        return new Promise((resolve, reject) => {
+            fs.readFile(this.filename, 'utf8', (error, data) => {
+                if(error){
+                    console.error(`Error al leer el archivo: ${error.message}`);
+                    reject(error);
+                }
+                resolve(data);
+            });
+        })
     }
 
     async list(id) {

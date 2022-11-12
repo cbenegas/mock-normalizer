@@ -12,7 +12,7 @@ class ContainerSQL {
     }
 
     async listAll(criterio = {}) {
- 
+
     }
 
     async save(elem) {
@@ -20,7 +20,7 @@ class ContainerSQL {
     }
 
     async update(elem) {
- 
+
     }
 
     async delete(id) {

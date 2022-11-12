@@ -12,3 +12,8 @@ class CarritosDaoFirebase extends ContainerFirebase {
 }
 
 export default CarritosDaoFirebase
+
+
+const prueba = await new CarritosDaoFirebase().listAll();
+
+console.log(prueba);
