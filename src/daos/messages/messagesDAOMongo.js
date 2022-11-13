@@ -1,5 +1,5 @@
-const {normalize, schema}  = require('normalizr');
-const ContainerMongoDb = require('../../containers/ContainerMongoDb');
+import { normalize, schema }  from 'normalizr';
+import ContainerMongoDb from '../../containers/ContainerMongoDb.js';
 
 /* 
     {
@@ -69,4 +69,4 @@ class messagesDAOMongo extends ContainerMongoDb {
     }
 }
 
-module.exports = messagesDAOMongo
+export default messagesDAOMongo

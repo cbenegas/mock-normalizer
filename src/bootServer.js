@@ -1,9 +1,10 @@
 import express from 'express'
 import productosRouter from './routers/producto.router.js';
 import carritosRouter from './routers/carrito.router.js';
+
+import chatSocket from './socket/chat.js';
+
 import handlebars from 'express-handlebars';
-
-
 import path from 'path';
 import {fileURLToPath} from 'url';
 
@@ -16,14 +17,13 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static('public'))
+
 
 app.use('/api/productos', productosRouter)
 app.use('/api/carritos', carritosRouter)
 
 app.get('/', (req, res) => {
     return res.render("index");
-    
 });
 
 // Config del front
@@ -42,7 +42,9 @@ app.engine(
 
 app.set("view engine", "hbs");
 app.set("views", "./views");
-app.use(express.static("public"));
+app.use(express.static('public'))
+
+chatSocket();
 
 
-export default app
+export default bootServer

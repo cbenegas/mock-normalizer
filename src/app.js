@@ -1,86 +1,84 @@
-// const express = require('express');
-// const handlebars = require('express-handlebars');
-// const { Server: IOServer } = require('socket.io');
-// const { Server: HttpServer } = require('http');
+import express from 'express'
+import productosRouter from './routers/producto.router.js';
+import carritosRouter from './routers/carrito.router.js';
 
-// const { router: routerProducts } = require('./routes/productos');
-// const { Products } = require('./routes/routerProducts.controller');
-// const {mariaDb} = require('../config/config');
-// const messagesDAOMongo = require('./daos/messages/messagesDAOMongo');
-// const { ApiProductoMock } = require('../test/ApiProductosMock');
+import handlebars from 'express-handlebars';
+import path from 'path';
+import {fileURLToPath} from 'url';
+
+import { Server as IOServer} from 'socket.io';
+import { Server as HttpServer } from 'http';
+// import app from '../bootServer';
+import messagesDAOMongo from './daos/messages/messagesDAOMongo.js';
+
+const PORT = 8091
+
+const app = express()
+const httpServer = new HttpServer(app);
+const io = new IOServer(httpServer);
+
+app.use('/productos', productosRouter)
+app.use('/carritos', carritosRouter)
+
+// Config del front
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.get('/', (req, res) => {
+    return res.render("index");
+});
+app.engine(
+    "hbs",
+    handlebars.engine({
+        extname: ".hbs",
+        defaultLayout: "main",
+        layoutsDir: __dirname + '/views/layouts',
+        partialsDir: __dirname + '/views/partials'
+    }),
+)
+
+app.set("views", "./views");
+app.use(express.static('public'))
+app.set("view engine", "hbs");
+//------------------------------------------------------------------------
+// instancio servidor
+
+const server = httpServer.listen(PORT, () => {
+    console.log(`Servidor http escuchando en el puerto ${server.address().port}`)
+})
+
+server.on('error', error => console.log(`Error en servidor ${error}`))
 
 
-// // const dbProducts = new Products( mariadbConfig, productsTableName );
-// const dbProducts = new ApiProductoMock(mariaDb.mariaDbConfig, mariaDb.productsTableName);
-// const PORT = 8095;
+//--------------------------------------------
+// configuro el servidor
 
-// const app = express();
-// const httpServer = new HttpServer(app);
-// const io = new IOServer(httpServer);
+const dbMsg = new messagesDAOMongo();
 
-
-
-// const dbMsg = new messagesDAOMongo();
-
-// app.use('/productos', routerProducts);
-
-// app.use(express.json());
-// app.use(express.urlencoded( { extended: true } ));
-
-// app.get('/', (req, res) => {
-//     return res.render("index");
-    
-// });
-
-
-// app.engine(
-//     "hbs",
-//     handlebars.engine({
-//         extname: ".hbs",
-//         defaultLayout: "main",
-//         layoutsDir: __dirname + '/views/layouts',
-//         partialsDir: __dirname + '/views/partials'
-//     }),
-// )
-// app.set("views", "./views");
-// app.use(express.static("public"));
-
-
-// app.set("view engine", "hbs");
-
-// const server = httpServer.listen( PORT, () => {
+// const serverSocket = httpServer.listen( PORT, () => {
 //     console.log(`Listening on port ${ PORT }`);
 // });
 
+// serverSocket.on( "Error", error => console.log(`Error while listening on port ${PORT}: ${error}`) );
 
+io.on('connection', async ( socket ) => {
+    // const products = await dbProducts.popular();
+    // socket.emit('products', products);
+    
+    const { wasError, data } = await dbMsg.getAllMessages();
+    !wasError && socket.emit("mensajes", data);
 
-// server.on( "Error", error => console.log(`Error while listening on port ${PORT}: ${error}`) );
-
-// io.on('connection', async ( socket ) => {
-//     const products = await dbProducts.popular();
-//     const { wasError, data } = await dbMsg.getAllMessages();
-//     socket.emit('products', products);
-//     !wasError && socket.emit("mensajes", data);
-
-//     socket.on("new_msg", async (data) => {
-//         console.log('new_msg',data);
-//         const { wasError, data: newMsg} = await dbMsg.insertMessages({...data});
+    socket.on("new_msg", async (data) => {
+        console.log('new_msg',data);
+        const { wasError, data: newMsg} = await dbMsg.insertMessages({...data});
         
-//         if (!wasError){
-//             const { wasError:Error, data } = await dbMsg.getAllMessages();
-//             console.log('back',data);
-//             !Error && io.sockets.emit("mensajes", data);
-//         }
-//         // socket.to().emit('evento', 'data')
-//     });
-
-//     socket.on('new_product', async ( newProduct ) => {
-//         console.log('producto recivido')
-//         console.log('new_product',newProduct);
-//         await dbProducts.save(newProduct);
-//         const products = await dbProducts.getAll();
-//         io.sockets.emit('products', products);
-//     })
-// })
-
-
+        if (!wasError){
+            const { wasError:Error, data } = await dbMsg.getAllMessages();
+            console.log('back',data);
+            !Error && io.sockets.emit("mensajes", data);
+        }
+        // socket.to().emit('evento', 'data')
+    });
+})
