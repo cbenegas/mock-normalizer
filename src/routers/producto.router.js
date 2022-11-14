@@ -1,5 +1,6 @@
 import express from 'express'
 const { Router } = express
+import bodyParser from 'body-parser';
 
 import { productosDao as productosApi } from '../daos/index.js'
 
@@ -20,6 +21,9 @@ const adminAuth = (permissions) => {
 
 //--------------------------------------------
 // configuro router de productos
+ 
+// create application/json parser
+let jsonParser = bodyParser.json()
 
 const productosRouter = new Router()
 
@@ -76,18 +80,12 @@ productosRouter.get('/:id', async (req, res) => {
     }
 })
 
-productosRouter.post('/', adminAuth(true), async (req, res) => {
+productosRouter.post('/', jsonParser, async (req, res) => {
     try{
         const { title, price, thumbnail } = req.body;
-        console.log("REQ: ", req)
-        // const body = req.body;
-        console.log("🚀 ~ file: producto.router.js ~ line 82 ~ productosRouter.post ~ body", body)
-        const producto = await productosApi.save({ title, price, thumbnail });
-        // return res.redirect("/");
-        res.send({
-            data: producto,
-            error: false
-        });
+        console.log("🚀 ~ file: producto.router.js ~ line 86 ~ productosRouter.post ~ body", req.body)
+        await productosApi.save({ title, price, thumbnail });
+        return res.redirect("/");
     } catch(e){
         console.log(e);
         res.send({
@@ -95,19 +93,6 @@ productosRouter.post('/', adminAuth(true), async (req, res) => {
             error: true
         });
     }
-
-    const { title, price, thumbnail } = req.body;
-    try {
-
-    } catch (e) {
-        return res
-        .status(404)
-        .send({
-            error: true,
-            msg: "Lo sentimos. Ha ocurrido un error. Intente nuevamente mas tarde.",
-        });
-    }
-
 })
 
 productosRouter.put('/:id', adminAuth(true), async (req, res) => {
