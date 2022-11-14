@@ -24,7 +24,7 @@ switch (config.TypeDB) {
         const { default: CarritosDaoMongoDb } = await import('./carritos/CarritosDaoMongoDb.js');
         
         productosDao = new ProductosDaoMongoDb();
-        carritosDao = new CarritosDaoMongoDb();
+        // carritosDao = new CarritosDaoMongoDb();
         break
     case 'mariadb':
         

@@ -1,9 +1,9 @@
-function estoEsFuncion(){
-    const perra = true;
-    if(perra){
-        console.log("esto es un javascript");
-    }
-}
-estoEsFuncion();
+// function estoEsFuncion(){
+//     const perra = true;
+//     if(perra){
+//         console.log("esto es un javascript");
+//     }
+// }
+// estoEsFuncion();
 
-export default estoEsFuncion;
+// export default estoEsFuncion;

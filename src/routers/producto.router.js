@@ -30,7 +30,6 @@ const productosRouter = new Router()
 productosRouter.get('/', async (req, res) => {
     try{
         const productsObjet = await productosApi.listAll()
-
         const productsJSON = JSON.parse(JSON.stringify(productsObjet));
 
         return res.render("products", 
@@ -50,10 +49,11 @@ productosRouter.get('/', async (req, res) => {
 productosRouter.get('/test', async (req, res) => {
     try{
         const productos = await productosApi.popular()
-        res.send({
-            data: productos,
-            error: false
-        });
+        return res.render("products", 
+        { 
+            products: productos.data,
+            haveProducts: productos.data.length > 0
+        })
     } catch(e){
         console.log(e);
         res.send({
@@ -83,7 +83,6 @@ productosRouter.get('/:id', async (req, res) => {
 productosRouter.post('/', jsonParser, async (req, res) => {
     try{
         const { title, price, thumbnail } = req.body;
-        console.log("🚀 ~ file: producto.router.js ~ line 86 ~ productosRouter.post ~ body", req.body)
         await productosApi.save({ title, price, thumbnail });
         return res.redirect("/");
     } catch(e){

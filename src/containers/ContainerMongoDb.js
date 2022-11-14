@@ -1,13 +1,21 @@
 import mongoose from 'mongoose'
 import config from '../../config/config.js'
 
-await mongoose.connect(config.mongodb.cnxStr, config.mongodb.options)
+const connectionInit = async () => {
+    try{
+        await mongoose.connect(config.mongodb.cnxStr, config.mongodb.options)
+    }catch(e){
+        console.log(e);
+    }
+}
+
 
 class ContainerMongoDb {
 
     constructor(nombreColeccion, esquema) {
         try{
             this.coleccion = mongoose.model(nombreColeccion, mongoose.Schema(esquema));
+            connectionInit();
         }catch(e){
             throw new Error(e);
         }
@@ -34,7 +42,6 @@ class ContainerMongoDb {
     async save(nuevoElem) {
         try{
             const element = await this.coleccion.create(nuevoElem);
-            console.log("🚀 ~ file: ContainerMongoDb.js ~ line 38 ~ ContainerMongoDb ~ save ~ element", element)
             return element
         }catch(e){
             throw new Error(e);
