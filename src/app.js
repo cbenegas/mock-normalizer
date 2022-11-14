@@ -17,6 +17,8 @@ const app = express()
 const httpServer = new HttpServer(app);
 const io = new IOServer(httpServer);
 
+app.use(express.json());
+app.use(express.urlencoded( { extended: true } ));
 app.use('/productos', productosRouter)
 app.use('/carritos', carritosRouter)
 
@@ -54,14 +56,7 @@ server.on('error', error => console.log(`Error en servidor ${error}`))
 
 //--------------------------------------------
 // configuro el servidor
-
 const dbMsg = new messagesDAOMongo();
-
-// const serverSocket = httpServer.listen( PORT, () => {
-//     console.log(`Listening on port ${ PORT }`);
-// });
-
-// serverSocket.on( "Error", error => console.log(`Error while listening on port ${PORT}: ${error}`) );
 
 io.on('connection', async ( socket ) => {
     // const products = await dbProducts.popular();

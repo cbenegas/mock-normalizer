@@ -1,6 +1,6 @@
 import { normalize, schema }  from 'normalizr';
 import ContainerMongoDb from '../../containers/ContainerMongoDb.js';
-
+import util from 'util';
 /* 
     {
         authors: { 
@@ -32,8 +32,8 @@ class messagesDAOMongo extends ContainerMongoDb {
     })
     }
 
-    getAllMessages() {
-        const messages = this.listAll();
+    async getAllMessages() {
+        const messages = await this.listAll();
         if (messages.wasError){
             return {wasError: true, data: messages.data} 
         }
@@ -43,8 +43,9 @@ class messagesDAOMongo extends ContainerMongoDb {
             author: authorSchema,
             text: [textSchema]
         });
+        console.log(`MESG: ${messages}`)
         const normalizedData = normalize(messages.data || {}, postSchema);
-        // console.log(normalizedData)
+        console.log(`GET_ALL_MSG: ${util.inspect(normalizedData,false,12,true)}`)
         return {wasError: false, data: normalizedData}
     }
     insertMessages(data) {

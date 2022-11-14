@@ -66,9 +66,7 @@ class ContainerFile {
                 data = [];
             }
             obj['id'] = id;
-            console.log(typeof(data))
             data.push(obj);
-            console.log(data);
             await this.saveFile(JSON.stringify(data));
         }catch(er){
             console.error("Archivo no actualizado.", er)

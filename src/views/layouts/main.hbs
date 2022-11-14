@@ -119,15 +119,15 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <script type="application/javascript" src="/socket.io/socker.io.js" defer></script>
+        <script type="application/javascript" src="/socket.io/socket.io.js" defer></script>
         <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
         <script type="application/javascript" src="./index.js" defer></script>
-        {{!-- defer --}} SUMATE A LA NUEVA CALL 
+        {{!-- defer --}} 
         <script>
             const socket = io.connect();
             const container_products = document.getElementById("products_html")
 
-            const send_new_product = (event) => {
+            {{!-- const send_new_product = (event) => {
                 const title = document.getElementById('title').value;
                 const price = document.getElementById('price').value;
                 const thumbnail = document.getElementById('thumbnail').value;
@@ -138,7 +138,7 @@
                         price, 
                         thumbnail
                     })
-            }
+            } --}}
 
             function render_msj(data) {
                 {{!-- console.log('render',JSON.stringify(data));  --}}
@@ -162,6 +162,7 @@
                 const text = document.getElementById("chat_mensaje").value;
                 document.getElementById("chat_mensaje").value = "";
                 const data = {id,name,lastname,age,alias,avatar,text}
+                console.log(data)
                 socket.emit("new_msg", data);
                 return false;
             }
