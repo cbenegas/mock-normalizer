@@ -1,8 +1,6 @@
 import express from 'express'
 import productosRouter from './routers/producto.router.js';
 import carritosRouter from './routers/carrito.router.js';
-import { denormalize } from 'normalizr';
-import postSchema from './daos/messages/postSchema.js';
 
 import handlebars from 'express-handlebars';
 import path from 'path';
@@ -13,7 +11,7 @@ import { Server as HttpServer } from 'http';
 // import app from '../bootServer';
 import messagesDAOMongo from './daos/messages/messagesDAOMongo.js';
 
-const PORT = 8095
+const PORT = 8099
 
 const app = express()
 const httpServer = new HttpServer(app);
@@ -65,9 +63,6 @@ io.on('connection', async ( socket ) => {
     socket.on("new_msg", async (data) => {
         dbMsg.insertMessages({...data});
         const mensajes = await dbMsg.getAllMessages();
-        const normalizedDataJSON = JSON.parse(JSON.stringify(mensajes));
-        const desnormalize = await denormalize(normalizedDataJSON.result, postSchema, normalizedDataJSON.entities)
-        console.log("🚀 ~ file: messagesDAOMongo.js ~ line 71 ~ messagesDAOMongo ~ getAllMessages ~ desnormalize", desnormalize)
-        io.sockets.emit("mensajes", desnormalize);
+        io.sockets.emit("mensajes", mensajes);
     });
 })

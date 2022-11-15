@@ -1,5 +1,4 @@
-import { normalize, denormalize  }  from 'normalizr';
-import postSchema from './postSchema.js';
+import { normalize, schema }  from 'normalizr';
 import ContainerMongoDb from '../../containers/ContainerMongoDb.js';
 import util from 'util';
 
@@ -57,20 +56,18 @@ class messagesDAOMongo extends ContainerMongoDb {
                 id: 'mensajes',
                 posts: data
             }
-            // const authorSchema = new schema.Entity('authors',{}, {idAttribute: 'email'});
-            // const textSchema = new schema.Entity('texts',{},{idAttribute: 'ind'});
-            // const articlesSchema = new schema.Entity('chats', {
-            //     author: authorSchema,
-            //     text: textSchema
-            // });
-            // const postSchema = new schema.Entity('posts',{
-            //     posts: [articlesSchema]
-            // })
+            const authorSchema = new schema.Entity('authors',{}, {idAttribute: 'email'});
+            const textSchema = new schema.Entity('texts',{},{idAttribute: 'ind'});
+            const articlesSchema = new schema.Entity('chats', {
+                author: authorSchema,
+                text: textSchema
+            });
+            const postSchema = new schema.Entity('posts',{
+                posts: [articlesSchema]
+            })
             const normalizedData = normalize(rawData || [], postSchema);
             const normalizedDataJSON = JSON.parse(JSON.stringify(normalizedData));
-            const desnormalize = await denormalize(normalizedDataJSON.result, postSchema, normalizedDataJSON.entities)
-            console.log("🚀 ~ file: messagesDAOMongo.js ~ line 71 ~ messagesDAOMongo ~ getAllMessages ~ desnormalize", desnormalize)
-            return normalizedData
+            return normalizedDataJSON
         }catch(e){
             throw new Error(e);
         }

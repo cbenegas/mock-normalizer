@@ -121,10 +121,12 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script type="application/javascript" src="/socket.io/socket.io.js" defer></script>
         <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
-        <script type="application/javascript" src="./index.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"></script>
+        {{!-- <script type="application/javascript" src="./index.js" defer></script> --}}
         {{!-- defer --}} 
         <script>
             const socket = io.connect();
+
             const container_products = document.getElementById("products_html")
 
             {{!-- const send_new_product = (event) => {
@@ -140,16 +142,26 @@
                     })
             } --}}
 
-            function render_msj(data) {
-                console.log(data.posts);
-                const html = data.map( (msg) => `<li class="clearfix">
+            async function render_msj(data) {
+                const authorSchema = new schema.Entity('authors',{}, {idAttribute: 'email'});
+                const textSchema = new schema.Entity('texts',{},{idAttribute: 'ind'});
+                const articlesSchema = new schema.Entity('chats', {
+                    author: authorSchema,
+                    text: textSchema
+                });
+                const postSchema = new schema.Entity('posts',{
+                    posts: [articlesSchema]
+                })
+                const desnormalize = await denormalize(data.result, postSchema, data.entities)
+                console.log(desnormalize);
+                /*const html = desnormalize.map( (msg) => `<li class="clearfix">
                                                 <div class="message-data">
                                                     <span class="fw-bold text-primary">${msg.email}</span>
                                                     <span class="text-success">[${msg.name}]</span>
                                                     <span class="fst-italic">${msg.text}</span>
                                                 </div>
                                                 </li>`).join(" ");
-                document.getElementById("mensajes").innerHTML = html; 
+                document.getElementById("mensajes").innerHTML = html; */
             }
 
             function enviarMensaje(event) {
