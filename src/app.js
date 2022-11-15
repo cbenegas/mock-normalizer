@@ -62,6 +62,8 @@ server.on('error', error => console.log(`Error en servidor ${error}`))
 const dbMsg = new messagesDAOMongo();
 
 io.on('connection', async ( socket ) => {
+    const mensajes = await dbMsg.getAllMessages();
+    io.sockets.emit("mensajes", mensajes);
 
     socket.on("new_msg", async (data) => {
         dbMsg.insertMessages({...data});

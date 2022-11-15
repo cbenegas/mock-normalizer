@@ -31,9 +31,8 @@
         />
         
     </head>
-
-        {{>header}}
     <body class="d-flex flex-column my-5">
+        {{>header}}
         <div class="container">
             {{{body}}}
         </div>
@@ -43,7 +42,6 @@
             <div class="col-lg-12">
             <div class="card chat-app">
                 <div class="chat">
-
                 <div class="chat-history">
                     <ul class="m-b-0" id="mensajes">
                     <li class="clearfix">
@@ -119,8 +117,53 @@
         <script type="application/javascript" src="/socket.io/socket.io.js" defer></script>
         <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.2/dist/normalizr.browser.min.js"></script>
-        <script type="module" src="./renderFront.js"></script>
-        {{!-- defer --}} 
+        <script>
+            const socket = io.connect();
+            async function render_msj(data) {
+                const authorSchema = new normalizr.schema.Entity('authors',{}, {idAttribute: 'email'});
+                const textSchema = new normalizr.schema.Entity('texts',{},{idAttribute: 'ind'});
+                const articlesSchema = new normalizr.schema.Entity('chats', {
+                    author: authorSchema,
+                    text: textSchema
+                });
+                const postSchema = new normalizr.schema.Entity('posts',{
+                    posts: [articlesSchema]
+                })
+                const desnormalize = await normalizr.denormalize(data.result, postSchema, data.entities)
+                console.log("🚀 ~ file: main.hbs ~ line 123 ~ render_msj ~ data", JSON.stringify(data).length)
+                console.log("🚀 ~ file: main.hbs ~ line 133 ~ render_msj ~ desnormalize", JSON.stringify(desnormalize).length)
+                console.log(`Se comprime en un : ${(1-(JSON.stringify(desnormalize).length/JSON.stringify(data).length))*100} % `)
+                
+                const html = desnormalize.posts.map( ({author,text}) => `<li class="clearfix">
+                                                <div class="message-data">
+                                                    <img class="fw-bold text-primary" width="60"  src="${author.avatar}" alt="avatar"/>
+                                                    <span class="text-success">[${author.name}]</span>
+                                                    <span class="fst-italic">${text.text}</span>
+                                                </div>
+                                                </li>`).join(" ");
+                document.getElementById("mensajes").innerHTML = html; 
+            }
+
+            function enviarMensaje(event) {
+                const email = document.getElementById("email").value;
+                const name = document.getElementById("name").value;
+                const lastname = document.getElementById("lastname").value;
+                const age = document.getElementById("age").value;
+                const alias = document.getElementById("alias").value;
+                const avatar = document.getElementById("avatar").value;
+                const text = document.getElementById("chat_mensaje").value;
+                document.getElementById("chat_mensaje").value = "";
+                const data = {email,name,lastname,age,alias,avatar,text}
+                socket.emit("new_msg", data);
+                return false;
+            }
+            socket.on("mensajes", (data) => {
+                render_msj(data);
+            });
+
+
+
+        </script>
 
     </body>
     
