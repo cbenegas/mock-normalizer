@@ -115,74 +115,12 @@
             </div>
         </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" ></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js" ></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <script type="application/javascript" src="/socket.io/socket.io.js" defer></script>
         <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"></script>
-        {{!-- <script type="application/javascript" src="./index.js" defer></script> --}}
+        <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.2/dist/normalizr.browser.min.js"></script>
+        <script type="module" src="./renderFront.js"></script>
         {{!-- defer --}} 
-        <script>
-            const socket = io.connect();
-
-            const container_products = document.getElementById("products_html")
-
-            {{!-- const send_new_product = (event) => {
-                const title = document.getElementById('title').value;
-                const price = document.getElementById('price').value;
-                const thumbnail = document.getElementById('thumbnail').value;
-                console.log('enviando products_html')
-                socket.emit('new_product', 
-                    { 
-                        title, 
-                        price, 
-                        thumbnail
-                    })
-            } --}}
-
-            async function render_msj(data) {
-                const authorSchema = new schema.Entity('authors',{}, {idAttribute: 'email'});
-                const textSchema = new schema.Entity('texts',{},{idAttribute: 'ind'});
-                const articlesSchema = new schema.Entity('chats', {
-                    author: authorSchema,
-                    text: textSchema
-                });
-                const postSchema = new schema.Entity('posts',{
-                    posts: [articlesSchema]
-                })
-                const desnormalize = await denormalize(data.result, postSchema, data.entities)
-                console.log(desnormalize);
-                /*const html = desnormalize.map( (msg) => `<li class="clearfix">
-                                                <div class="message-data">
-                                                    <span class="fw-bold text-primary">${msg.email}</span>
-                                                    <span class="text-success">[${msg.name}]</span>
-                                                    <span class="fst-italic">${msg.text}</span>
-                                                </div>
-                                                </li>`).join(" ");
-                document.getElementById("mensajes").innerHTML = html; */
-            }
-
-            function enviarMensaje(event) {
-                const email = document.getElementById("email").value;
-                const name = document.getElementById("name").value;
-                const lastname = document.getElementById("lastname").value;
-                const age = document.getElementById("age").value;
-                const alias = document.getElementById("alias").value;
-                const avatar = document.getElementById("avatar").value;
-                const text = document.getElementById("chat_mensaje").value;
-                document.getElementById("chat_mensaje").value = "";
-                const data = {email,name,lastname,age,alias,avatar,text}
-                socket.emit("new_msg", data);
-                return false;
-            }
-
-            socket.on("mensajes", (data) => {
-                
-                render_msj(data);
-            });
-        </script>
 
     </body>
     

@@ -28,6 +28,11 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+app.set("views", "./views");
+app.use(express.static(__dirname))
+app.set("view engine", "hbs");
+
 app.get('/', (req, res) => {
     return res.render("index");
 });
@@ -41,9 +46,7 @@ app.engine(
     }),
 )
 
-app.set("views", "./views");
-app.use(express.static('public'))
-app.set("view engine", "hbs");
+
 //------------------------------------------------------------------------
 // instancio servidor
 

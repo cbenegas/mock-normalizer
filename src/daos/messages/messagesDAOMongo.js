@@ -1,6 +1,7 @@
 import { normalize, schema }  from 'normalizr';
 import ContainerMongoDb from '../../containers/ContainerMongoDb.js';
 import util from 'util';
+import postSchema from './postSchema.js';
 
 const requiredFields = ['email','name','lastname','age','alias','avatar','text'];
 
@@ -56,15 +57,15 @@ class messagesDAOMongo extends ContainerMongoDb {
                 id: 'mensajes',
                 posts: data
             }
-            const authorSchema = new schema.Entity('authors',{}, {idAttribute: 'email'});
-            const textSchema = new schema.Entity('texts',{},{idAttribute: 'ind'});
-            const articlesSchema = new schema.Entity('chats', {
-                author: authorSchema,
-                text: textSchema
-            });
-            const postSchema = new schema.Entity('posts',{
-                posts: [articlesSchema]
-            })
+            // const authorSchema = new schema.Entity('authors',{}, {idAttribute: 'email'});
+            // const textSchema = new schema.Entity('texts',{},{idAttribute: 'ind'});
+            // const articlesSchema = new schema.Entity('chats', {
+            //     author: authorSchema,
+            //     text: textSchema
+            // });
+            // const postSchema = new schema.Entity('posts',{
+            //     posts: [articlesSchema]
+            // })
             const normalizedData = normalize(rawData || [], postSchema);
             const normalizedDataJSON = JSON.parse(JSON.stringify(normalizedData));
             return normalizedDataJSON
