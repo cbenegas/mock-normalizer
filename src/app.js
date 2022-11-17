@@ -1,14 +1,19 @@
-import express from 'express'
+import express from 'express';
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
+
 import productosRouter from './routers/producto.router.js';
+import userRouter from './routers/user.router.js';
 import carritosRouter from './routers/carrito.router.js';
 
 import handlebars from 'express-handlebars';
 import path from 'path';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 
 import { Server as IOServer} from 'socket.io';
 import { Server as HttpServer } from 'http';
-// import app from '../bootServer';
+
 import messagesDAOMongo from './daos/messages/messagesDAOMongo.js';
 
 const PORT = 8099
@@ -17,25 +22,57 @@ const app = express()
 const httpServer = new HttpServer(app);
 const io = new IOServer(httpServer);
 
+
+const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
+
+const isLogged = (req, res, next) => {
+    if (!req.session.username){
+        res.redirect("/user/login")
+    }
+    next();
+};
+
+app.use(
+    session({
+        secret: "32m32e90me2393",
+        store: MongoStore.create({
+            mongoUrl: "mongodb+srv://einsua91:0AsDIACXvDmHDQug@cluster0.j7gmil7.mongodb.net/test",
+            mongoOptions: advancedOptions,
+        }),
+        resave: false,
+        saveUninitialized: false,
+    })
+);
+
 app.use(express.json());
 app.use(express.urlencoded( { extended: true } ));
-app.use('/productos', productosRouter)
-app.use('/carritos', carritosRouter)
+app.use('/productos', isLogged, productosRouter);
+app.use('/user', userRouter);
+// app.use('/carritos', carritosRouter)
 
 // Config del front
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
 
 app.set("views", "./views");
 app.use(express.static(__dirname))
 app.set("view engine", "hbs");
 
-app.get('/', (req, res) => {
-    return res.render("index");
+
+
+app.get('/', isLogged, (req, res) => {
+    return res.render("index", {layout: 'main', username: req.session.username}); 
 });
+
+
+
+
+app.get('/*', (req, res) => {
+    res.redirect("/")
+});
+
+
 app.engine(
     "hbs",
     handlebars.engine({

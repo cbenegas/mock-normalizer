@@ -35,7 +35,8 @@ productosRouter.get('/', async (req, res) => {
         return res.render("products", 
         { 
             products: productsJSON,
-            haveProducts: productsJSON.length > 0
+            haveProducts: productsJSON.length > 0,
+            username: req.session.username
         })
     } catch(e){
         console.log(e);
@@ -52,7 +53,8 @@ productosRouter.get('/test', async (req, res) => {
         return res.render("products", 
         { 
             products: productos.data,
-            haveProducts: productos.data.length > 0
+            haveProducts: productos.data.length > 0,
+            username: req.session.username
         })
     } catch(e){
         console.log(e);

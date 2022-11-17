@@ -1,7 +1,7 @@
 import { Server as IOServer} from 'socket.io';
 import { Server as HttpServer } from 'http';
-import app from '../bootServer';
-import messagesDAOMongo from '../daos/messages/messagesDAOMongo';
+// import app from '../bootServer';
+// import messagesDAOMongo from '../daos/messages/messagesDAOMongo';
 
 const chatSocket = () =>{
     const httpServer = new HttpServer(app);
