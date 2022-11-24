@@ -4,7 +4,7 @@ export default {
         path: './DB'
     },
     mongodb: {
-        cnxStr:`mongodb://localhost:27017/ecommerce`,
+        cnxStr:`mongodb+srv://einsua91:0AsDIACXvDmHDQug@cluster0.j7gmil7.mongodb.net/test`,
         options: {
             serverSelectionTimeoutMS: 5000,
             useNewUrlParser: true,

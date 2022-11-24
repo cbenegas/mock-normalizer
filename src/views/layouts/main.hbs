@@ -31,9 +31,9 @@
         />
         
     </head>
-    <body class="d-flex flex-column my-5">
+    <body class="d-flex flex-column my-5 bg-dark text-white">
         {{>header}}
-        <div class="container">
+        <div class="container bg-dark text-white">
             {{{body}}}
         </div>
         <div id="messages" class="container">
@@ -138,7 +138,7 @@
                                                 <div class="message-data">
                                                     <img class="fw-bold text-primary" width="60"  src="${author.avatar}" alt="avatar"/>
                                                     <span class="text-success">[${author.name}]</span>
-                                                    <span class="fst-italic">${text.text}</span>
+                                                    <span class="fst-italic text-dark">${text.text}</span>
                                                 </div>
                                                 </li>`).join(" ");
                 document.getElementById("mensajes").innerHTML = html; 

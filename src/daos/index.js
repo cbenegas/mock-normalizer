@@ -2,6 +2,8 @@ import config from '../../config/config.js'
 
 let productosDao
 let carritosDao
+let messagesDao
+let usersDao
 
 switch (config.TypeDB) {
     case 'json':
@@ -22,9 +24,13 @@ switch (config.TypeDB) {
     case 'mongodb':
         const { default: ProductosDaoMongoDb } = await import('./productos/ProductosDaoMongoDb.js');
         const { default: CarritosDaoMongoDb } = await import('./carritos/CarritosDaoMongoDb.js');
+        const { default: messagesDAOMongo } = await import('./messages/messagesDaoMongo.js');
+        const { default: usersDaoMongoDb } = await import('./users/usersDaoMongo.js');
         
         productosDao = new ProductosDaoMongoDb();
-        // carritosDao = new CarritosDaoMongoDb();
+        carritosDao = new CarritosDaoMongoDb();
+        messagesDao = new messagesDAOMongo();
+        usersDao = new usersDaoMongoDb();
         break
     case 'mariadb':
         
@@ -37,4 +43,9 @@ switch (config.TypeDB) {
         break
 }
 
-export { productosDao, carritosDao }
+export { 
+        productosDao, 
+        messagesDao, 
+        usersDao, 
+        carritosDao 
+    }
